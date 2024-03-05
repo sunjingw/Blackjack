@@ -9,7 +9,6 @@ public class Deck {
 
     private Deck() {
         cards = new Stack<>();
-        createDeck();
     }
 
     public static void addCard(Card card) {
@@ -17,14 +16,14 @@ public class Deck {
         count++;
     }
 
-    public static Card getCard() {
+    public Card getCard() {
         count--;
         return cards.pop();
     }
-    public static void printDeck() {
+    public void printDeck() {
         cards.stream().forEach(System.out::println);
     }
-    public static void shuffleDeck(int n) {
+    public void shuffleDeck(int n) {
         //shuffle n times
         for (int i = 0; i < n; i++) {
             Collections.shuffle(cards);
@@ -44,7 +43,7 @@ public class Deck {
         }
     }
 
-    public static Stack<Card> getDeck() {
+    public Stack<Card> getDeck() {
         return cards;
     }
     public static Deck getInstance() {
@@ -57,15 +56,12 @@ public class Deck {
         return result;
     }
 
-    public static void destroyInstance() {
+    public void destroyInstance() {
         instance = null;
     }
 
-    public static int getCount() {
+    public int getCount() {
         return count;
     }
 
-    public static void setCount(int count) {
-        Deck.count = count;
-    }
 }
