@@ -3,44 +3,69 @@ package org.xyz.model;
 import java.util.*;
 
 public class Deck {
-    private Stack<Card> cards;
+    private static Stack<Card> cards;
+    private static Deck instance;
+    private static int count;
 
-    public Deck() {
+    private Deck() {
         cards = new Stack<>();
+        createDeck();
     }
 
-    public void generateDeck() {
+    public static void addCard(Card card) {
+        cards.push(card);
+        count++;
+    }
+
+    public static Card getCard() {
+        count--;
+        return cards.pop();
+    }
+    public static void printDeck() {
+        cards.stream().forEach(System.out::println);
+    }
+    public static void shuffleDeck(int n) {
+        //shuffle n times
+        for (int i = 0; i < n; i++) {
+            Collections.shuffle(cards);
+        }
+    }
+
+    public static void createDeck() {
+
         CardValue[] cardValues = CardValue.values();
         Suit[] suits = Suit.values();
 
-        for (int i = 0; i <cardValues.length; i++) {
+        for (int i = 0; i < cardValues.length; i++) {
             for (int j = 0; j < suits.length; j++) {
                 Card card = new Card(cardValues[i], suits[j]);
                 addCard(card);
             }
         }
     }
-    public void addCard(Card card) {
-        cards.push(card);
-    }
 
-    public Card getCard() {
-        return cards.pop();
-    }
-
-    public void shuffle(int n) {
-        //shuffle n times
-        for (int i = 0; i < n; i++) {
-            Collections.shuffle(cards);
-        }
-    }
-    public Stack<Card> getDeck() {
+    public static Stack<Card> getDeck() {
         return cards;
     }
-
-    public void printDeck() {
-        cards.stream().forEach(System.out::println);
+    public static Deck getInstance() {
+        var result = instance;
+        if (result == null) {
+            result = new Deck();
+            instance = result;
+            return result;
+        }
+        return result;
     }
 
+    public static void destroyInstance() {
+        instance = null;
+    }
 
+    public static int getCount() {
+        return count;
+    }
+
+    public static void setCount(int count) {
+        Deck.count = count;
+    }
 }
