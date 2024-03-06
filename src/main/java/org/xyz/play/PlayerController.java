@@ -30,6 +30,10 @@ public class PlayerController {
     public int getPlayerCardValues() {
         return player.getCardValues();
     }
+
+    public boolean doesPlayerAceExist() {
+       return false;
+    }
     public void hit() {
 
     }

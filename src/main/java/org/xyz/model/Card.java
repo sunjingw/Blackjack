@@ -4,13 +4,20 @@ import java.util.*;
 
 public class Card {
     private CardValue cardValue;
-    private int value;
+    private int value1;
+    private int value2;
     private Suit suit;
 
     public Card(CardValue value, Suit suit) {
         this.cardValue = value;
         this.suit = suit;
-        this.value = value.getValue();
+
+        if (value == CardValue.ACE) {
+            value1 = 1;
+            value2 = 11;
+        } else
+            value1 = value.getValue();
+
     }
 
     public CardValue getCardValue() {
@@ -22,6 +29,10 @@ public class Card {
 
     @Override
     public String toString() {
-        return cardValue + "(" + value + ") of " + suit;
+        if (value2 != 0) {
+            return cardValue + "(" + value1 + " or " + value2 + ") of " + suit;
+        }
+        
+        return cardValue + "(" + value1 + ") of " + suit;
     }
 }

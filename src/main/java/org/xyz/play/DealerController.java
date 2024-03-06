@@ -45,4 +45,8 @@ public class DealerController {
         return dealer.getCardValues();
     }
 
+    public boolean doesDealerAceExist() {
+        return dealer.containsAce();
+    }
+
 }

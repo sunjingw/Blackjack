@@ -5,7 +5,7 @@ import java.util.*;
 public class Dealer {
     private static Dealer instance;
     private List<Card> cards;
-    private int cardValues;
+
     private Dealer(){
         cards = new ArrayList<>();
     }
@@ -21,16 +21,24 @@ public class Dealer {
     }
 
     public int getCardValues() {
-        if (cards.contains(CardValue.ACE)) {
-            //TODO
+
+        if (2 > 0) {
+
+
+            //represent Ace as 1
+
+            //represent Ace as 11
         }
 
         return cards.stream().reduce(0,(x, y) -> x + y.getCardValue().getValue(), Integer::sum);
 
     }
 
-    public void setCardValues(int cardValues) {
-        this.cardValues = cardValues;
+    public boolean containsAce() {
+
+        if (cards.stream().filter(e -> e.getCardValue() == CardValue.ACE).count() > 0)
+            return true;
+        return false;
     }
 
     public void add(Card card) {

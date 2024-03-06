@@ -39,11 +39,14 @@ public class Game {
 
 
         System.out.println("Deal to dealer: ");
+        System.out.println("--------------------");
         dealerController.getDealerCards().stream().forEach(System.out::println);
-
+        System.out.println("--------------------");
 
         System.out.println("Deal to player: ");
+        System.out.println("--------------------");
         playerController.getPlayerCards().stream().forEach(System.out::println);
+        System.out.println("--------------------");
 
         hitOrStand();
 
@@ -51,16 +54,22 @@ public class Game {
 
     public void hitOrStand() {
 
+        int playerCardValues = playerController.getPlayerCardValues();
+        int dealerCardValues = dealerController.getDealerCardValues();
+        boolean playerAce = playerController.doesPlayerAceExist();
+        boolean dealerAce = dealerController.doesDealerAceExist();
+
         //loop if game is not finished
         while (!gameFinished) {
+
+            System.out.println("Player Total: " + (playerAce ? playerCardValues + " or " + (playerCardValues+10) : playerCardValues));
+            System.out.println("Dealer Total: " + (dealerAce ? dealerCardValues + " or " + (dealerCardValues+10) : dealerCardValues));
+
 
             //player's turn
             if (turn < players-1) {
 
-                //fetch list of card values from player's hand
-                int cardValues = playerController.getPlayerCardValues();
-
-                while (cardValues < 21) {
+                while (playerCardValues < 21) {
 
                     System.out.println("Enter 1 to Hit or 2 to Stand");
                     int response = new java.util.Scanner(System.in).nextInt();
@@ -68,19 +77,23 @@ public class Game {
 
                         //hit will add another card to player's hand
                         System.out.println("Deal to player: " + dealerController.dealToPlayer());
-                        cardValues = playerController.getPlayerCardValues();
+                        playerCardValues = playerController.getPlayerCardValues();
 
-                        if (cardValues > 21) {
-                            System.out.println("Bust: " + cardValues);
+                        if (playerCardValues > 21) {
+                            System.out.println("Bust: " + playerCardValues);
                             turn++;
                             gameFinished = true;
                             break;
 
-                        } else if (cardValues == 21) {
+                        } else if (playerCardValues == 21) {
                             System.out.println("Winner 21");
                             turn++;
                         } else {
-                            System.out.println("Total: " + cardValues);
+
+                            if (playerAce)
+                                System.out.println("Total: " + playerCardValues + " or " + (playerCardValues+10));
+                            else
+                                System.out.println("Total: " + playerCardValues);
                         }
 
                     } else {
@@ -92,44 +105,65 @@ public class Game {
 
             } else {
 
-                int cardValues = dealerController.getDealerCardValues();
+                dealerCardValues = dealerController.getDealerCardValues();
+                int val1 = dealerCardValues;
+                int val2 = dealerCardValues + 10;
 
-                while (cardValues < 17) {
+                if (dealerAce) {
+
+                    if (val2 >=17 && val2 <= 21) {
+                        dealerCardValues = val2;
+                    }
+                } else {
+                    dealerCardValues = dealerController.getDealerCardValues();
+                }
+
+
+                if (dealerCardValues >= 17 && dealerCardValues < 21) {
+                    System.out.println("Dealer stands at: " + dealerCardValues);
+                    gameFinished = true;
+                }
+
+                while (dealerCardValues < 17) {
                     System.out.println("Deal to dealer: " + dealerController.dealToDealer());
-                    cardValues = dealerController.getDealerCardValues();
+                    dealerCardValues = dealerController.getDealerCardValues();
 
-                    if (cardValues > 21) {
-                        System.out.println("Dealer bust: " + cardValues);
+                    if (dealerCardValues > 21) {
+                        System.out.println("Dealer bust: " + dealerCardValues);
                         gameFinished = true;
                         break;
 
-                    } else if (cardValues == 21) {
+                    } else if (dealerCardValues == 21) {
                         System.out.println("Dealer blackjack");
                         gameFinished = true;
                         break;
 
-                    } else if (cardValues >= 17) {
-                        System.out.println("Dealer stands at: " + cardValues);
-                        gameFinished = true;
                     }
-
                 }
+
             }
         }
 
+        if (playerCardValues > 21)
+            System.out.println("Dealer wins");
+        else if (dealerCardValues > 21)
+            System.out.println("Player wins");
+        else
+            determineWinner(playerCardValues, dealerCardValues);
+
     }
 
-    public void determineWinner() {
+    public void determineWinner(int playerCardValues, int dealerCardValues) {
 
-        int playerCardValues = playerController.getPlayerCardValues();
-        int dealerCardValues = dealerController.getDealerCardValues();
         System.out.println("Player: " + playerCardValues);
         System.out.println("Dealer: " + dealerCardValues);
 
-        if ((playerCardValues <= 21) && (playerCardValues > dealerCardValues)) {
+        if (playerCardValues > dealerCardValues) {
             System.out.println("Player wins");
-        } else if (playerCardValues == dealerCardValues && (playerCardValues <= 21)) {
+        } else if (playerCardValues == dealerCardValues) {
             System.out.println("Tie");
+        } else {
+            System.out.println("Dealer wins");
         }
 
     }
