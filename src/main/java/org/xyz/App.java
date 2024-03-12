@@ -18,6 +18,7 @@ public class App
         Deck.createDeck();
 
         game.shuffleDeck(3);
+        game.setPlayers(3);
         game.start();
 
 

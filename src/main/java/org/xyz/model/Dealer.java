@@ -5,7 +5,8 @@ import java.util.*;
 public class Dealer {
     private static Dealer instance;
     private List<Card> cards;
-
+    private boolean bust;
+    private boolean ace;
     private Dealer(){
         cards = new ArrayList<>();
     }
@@ -18,6 +19,22 @@ public class Dealer {
             return result;
         }
         return result;
+    }
+
+    public boolean isAce() {
+        return ace;
+    }
+
+    public void setAce(boolean ace) {
+        this.ace = ace;
+    }
+
+    public boolean isBust() {
+        return bust;
+    }
+
+    public void setBust(boolean bust) {
+        this.bust = bust;
     }
 
     public int getCardValues() {

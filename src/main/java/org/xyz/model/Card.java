@@ -1,12 +1,10 @@
 package org.xyz.model;
 
-import java.util.*;
-
 public class Card {
-    private CardValue cardValue;
-    private int value1;
+    private final CardValue cardValue;
+    private final int value1;
     private int value2;
-    private Suit suit;
+    private final Suit suit;
 
     public Card(CardValue value, Suit suit) {
         this.cardValue = value;
@@ -23,6 +21,7 @@ public class Card {
     public CardValue getCardValue() {
         return cardValue;
     }
+
     public Suit getSuit() {
         return suit;
     }
@@ -32,7 +31,7 @@ public class Card {
         if (value2 != 0) {
             return cardValue + "(" + value1 + " or " + value2 + ") of " + suit;
         }
-        
+
         return cardValue + "(" + value1 + ") of " + suit;
     }
 }

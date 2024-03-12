@@ -7,14 +7,16 @@ import java.util.*;
 public class DealerController {
     private Deck deck;
     private Dealer dealer;
+    private List<Player> players;
     private Player player;
 
-    public DealerController(Player player) {
+    public DealerController(List<Player> player) {
         deck = Deck.getInstance();
         dealer = Dealer.getDealer();
-        this.player = player;
+        this.players = player;
 
     }
+
 
     public void shuffleDeck(int n) {
         deck.shuffleDeck(n);
@@ -35,6 +37,16 @@ public class DealerController {
         player.add(card);
         return card;
 
+    }
+
+    public void setDealerBust(boolean bust) {
+        dealer.setBust(bust);
+    }
+    public boolean isDealerBust() {
+        return dealer.isBust();
+    }
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public List<Card> getDealerCards() {
