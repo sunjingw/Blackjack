@@ -23,9 +23,12 @@ public class Game {
     }
 
     public void setPlayers(int players) {
+        char name = 'A';
+
         for (int i = 0; i < players; i++) {
             Player player = new Player();
-            player.setPlayerNum(i);
+            player.setName(name + "");
+            name++;
             player.setBust(false);
             this.players.add(player);
         }
@@ -53,12 +56,12 @@ public class Game {
         }
 
         System.out.println("--------------------");
-        System.out.println("Dealer Cards: ");
+        System.out.println("Dealer: ");
         dealerController.getDealerCards().stream().forEach(System.out::println);
 
         System.out.println("--------------------");
-        System.out.println("Player cards: ");
-        playerController.getPlayers().stream().forEach(e -> System.out.println(e.getCards()));
+        System.out.println("Players: ");
+        playerController.getPlayers().stream().forEach(e -> System.out.println(e.getName() + ": " + e.getCards()));
         System.out.println("--------------------");
 
         hitOrStand();
@@ -76,44 +79,41 @@ public class Game {
         //loop if game is not finished
         while (!gameFinished) {
 
-
             dealerCardValues = dealerController.getDealerCardValues();
             dealerAce = dealerController.doesDealerAceExist();
 
             System.out.println();
-            System.out.println("Total Score");
+            System.out.println("Dealt Hands");
             for (Player p : playerController.getPlayers()) {
-                System.out.println("Player " + p.getPlayerNum() + " " + (p.doesPlayerAceExist() ? (p.getCardValues() + " or " + (p.getCardValues()+10)) : p.getCardValues()));
+                System.out.println("Player " + p.getName() + " " + (p.doesPlayerAceExist() ? (p.getCardValues() + " or " + (p.getCardValues()+10)) : p.getCardValues()));
             }
-            System.out.println("Dealer Total: " + (dealerAce ? dealerCardValues + " or " + (dealerCardValues + 10) : dealerCardValues));
+            System.out.println("Dealer " + (dealerAce ? dealerCardValues + " or " + (dealerCardValues + 10) : dealerCardValues));
             System.out.println();
 
             if (turn < players.size()) {
 
-                playerCardValues = playerController.getPlayers().get(turn).getCardValues();
-                playerAce = playerController.getPlayers().get(turn).doesPlayerAceExist();
-//                if (playerController.getPlayers().get(turn).isBust()) {
-//                    break;
-//                }
+                Player player = playerController.getPlayers().get(turn);
+                playerCardValues = player.getCardValues();
+                playerAce = player.doesPlayerAceExist();
 
-                dealerController.setPlayer(playerController.getPlayers().get(turn));
+                dealerController.setPlayer(player);
 
                 while (playerCardValues <= 21) {
 
-                    System.out.println("Player " + turn + " enter 1 to Hit or 2 to Stand");
+                    System.out.println("Player " + player.getName() + " enter 1 to Hit or 2 to Stand");
                     int response = new java.util.Scanner(System.in).nextInt();
 
                     if (response == Choices.HIT.getChoice()) {
 
                         //hit will add another card to player's hand
-                        System.out.println("Deal to player " + turn + ": \n" + dealerController.dealToPlayer());
-                        playerCardValues = playerController.getPlayers().get(turn).getCardValues();
+                        System.out.println("Deal to player " + player.getName() + ": \n" + dealerController.dealToPlayer());
+                        playerCardValues = player.getCardValues();
 
-                        System.out.println("Player " + turn + " Total: " + (playerAce ? playerCardValues + " or " + (playerCardValues + 10) : playerCardValues));
+                        System.out.println("Player " + player.getName() + ": " + (playerAce ? playerCardValues + " or " + (playerCardValues + 10) : playerCardValues));
 
                         if (playerCardValues > 21) {
-                            System.out.println("Player " + turn + " BUST");
-                            playerController.getPlayers().get(turn).setBust(true);
+                            System.out.println("Player " + player.getName() + " BUST");
+                            player.setBust(true);
                             turn++;
                             break;
 
@@ -124,19 +124,11 @@ public class Game {
                             if (playerAce) {
 
                                 if (playerCardValues + 10 == 21) {
-                                    System.out.println("Player " + turn + " Natural 21");
+                                    System.out.println("Player " + player.getName() + " Natural 21");
                                     turn++;
                                 }
 
                             }
-//                            else {
-//
-//                                if (playerCardValues == 21) {
-//                                    System.out.println("Player " + turn + " 21");
-//                                    turn++;
-//                                }
-//                            }
-
                         }
 
                     } else {
@@ -181,7 +173,6 @@ public class Game {
 
                         System.out.println("Dealer Total: " + (dealerAce ? dealerCardValues + " or " + val2 : dealerCardValues));
 
-                        System.out.println();
                     }
 
                     if (dealerCardValues == 21 || val2 == 21) {
@@ -202,6 +193,7 @@ public class Game {
 
         }
 
+        System.out.println();
         System.out.println("------GAME OVER------");
 
         determineWinner(dealerCardValues);
@@ -215,31 +207,31 @@ public class Game {
                 .forEach(e ->
                 {
                     if (e.isBust()) {
-                        System.out.println("Player " + e.getPlayerNum() + " lost");
+                        System.out.println("Player " + e.getName()  + " lost");
 
                     } else if (dealerController.isDealerBust()) {
-                        System.out.println("Player " + e.getPlayerNum() + " wins");
+                        System.out.println("Player " + e.getName() + " wins");
 
                     } else {
                         if (e.doesPlayerAceExist()) {
 
                             int aceValue = e.getCardValues() + 10;
                             if (aceValue <= 21 && aceValue > dealerCardValues) {
-                                System.out.println("Player " + e.getPlayerNum() + " wins");
+                                System.out.println("Player " + e.getName() + " wins");
                             } else if (aceValue == dealerCardValues) {
-                                System.out.println("Player " + e.getPlayerNum() + " tied");
+                                System.out.println("Player " + e.getName()  + " tied");
                             } else {
-                                System.out.println("Player " + e.getPlayerNum() + " lost");
+                                System.out.println("Player " + e.getName() + " lost");
                             }
                         } else {
                             if ((e.getCardValues() > dealerCardValues &&
                                     e.getCardValues() <= 21 && dealerCardValues <= 21)) {
-                                System.out.println("Player " + e.getPlayerNum() + " wins");
+                                System.out.println("Player " + e.getName() + " wins");
 
                             } else if (e.getCardValues() == dealerCardValues && dealerCardValues <= 21) {
-                                System.out.println("Player " + e.getPlayerNum() + " tied");
+                                System.out.println("Player " + e.getName() + " tied");
                             } else {
-                                System.out.println("Player " + e.getPlayerNum() + " lost");
+                                System.out.println("Player " + e.getName() + " lost");
                             }
                         }
                     }

@@ -4,8 +4,7 @@ import java.util.*;
 
 public class Player {
     private List<Card> cards;
-    private int cardValues;
-    private int playerNum;
+    private String name;
     private boolean bust;
     private boolean win;
 
@@ -13,25 +12,16 @@ public class Player {
         cards = new ArrayList<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void add(Card card) {
         cards.add(card);
-    }
-
-    public boolean isWin() {
-        return win;
-    }
-
-    public void setWin(boolean win) {
-        this.win = win;
-    }
-
-    public int getPlayerNum() {
-        return playerNum;
-    }
-
-
-    public void setPlayerNum(int playerNum) {
-        this.playerNum = playerNum;
     }
 
     public List<Card> getCards() {
